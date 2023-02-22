@@ -23,4 +23,30 @@ createUser = (req, res) => {
       .catch((err) => res.status(500).json(err));
 };
 
-module.exports = { getUsers, getOneUser, createUser };
+putOneUser = (req, res) => {
+  const { userId } = req.params;
+  const updatedData = req.body;
+
+  User.findByIdAndUpdate(userId, updatedData, { new: true })
+    .then((user) =>
+      !user
+        ? res.status(404).json({ message: 'No user with that ID' })
+        : res.json(user)
+    )
+    .catch((err) => res.status(500).json(err));
+};
+
+deleteOneUser = (req, res) => {
+  const { userId } = req.params;
+
+  User.findByIdAndDelete(userId)
+    .then((user) =>
+      !user
+        ? res.status(404).json({ message: 'No user with that ID' })
+        : res.json({ message: 'User deleted successfully' })
+    )
+    .catch((err) => res.status(500).json(err));
+};
+
+
+module.exports = { getUsers, getOneUser, createUser, putOneUser, deleteOneUser };
